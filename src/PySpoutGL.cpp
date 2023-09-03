@@ -1,6 +1,6 @@
 /*
  * Copyright 2021 Google LLC
- * 
+ *
  *  Use of this source code is governed by a BSD-style
  *  license that can be found in the LICENSE file or at
  *  https://developers.google.com/open-source/licenses/bsd
@@ -31,7 +31,7 @@ template<typename ByteType>
 void copyToFloatBuffer(py::buffer_info& src, py::buffer_info& dest) {
     ByteType* values = static_cast<ByteType *>(src.ptr);
     float* floats = static_cast<float *>(dest.ptr);
-    
+
     int bitsPerEntry = 8 * sizeof(ByteType);
     float maxValue = (float) ((1 << bitsPerEntry) - 1);
 
@@ -44,7 +44,7 @@ template<typename ByteType>
 void copyToByteBuffer(py::buffer_info& src, py::buffer_info& dest) {
     float* floats = static_cast<float *>(src.ptr);
     ByteType* bytes = static_cast<ByteType *>(dest.ptr);
-    
+
     int bitsPerEntry = 8 * sizeof(ByteType);
     ByteType maxValue = (ByteType) ((1 << bitsPerEntry) - 1);
 
@@ -85,7 +85,7 @@ PYBIND11_MODULE(_spoutgl, m) {
 
         .. currentmodule:: SpoutGL
     )pbdoc";
-    
+
     addCommonDefs(py::class_<SpoutSender>(m, "SpoutSender")
         .def(py::init<>())
         .def("__enter__", [&](SpoutSender& sender) {
@@ -95,6 +95,7 @@ PYBIND11_MODULE(_spoutgl, m) {
                 sender.ReleaseSender();
             })
         .def("setSenderName", &SpoutSender::SetSenderName)
+        .def("setSenderFormat", &SpoutSender::SetSenderFormat)
         .def("releaseSender", &SpoutSender::ReleaseSender)
         .def("sendTexture", &SpoutSender::SendTexture)
         .def("sendFbo", &SpoutSender::SendFbo)
@@ -208,7 +209,7 @@ PYBIND11_MODULE(_spoutgl, m) {
     enums.add_object("GL_BGRA_EXT", py::int_(GL_BGRA_EXT));
     enums.add_object("GL_RGB", py::int_(GL_RGB));
     enums.add_object("GL_BGR_EXT", py::int_(GL_BGR_EXT));
-    
+
     auto helpers = m.def_submodule("helpers", "Helper utilities specific to the Python wrapper");
 
     helpers.def("getBytesPerPixel", &getBytesPerPixel, "Get the number of bytes per pixel for a GL format (assuming GL_UNSIGNED_BYTE)");
